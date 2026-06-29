@@ -3,28 +3,24 @@
 sdd-conductor is an AI agent-assisted software development orchestration system. It is a corpus
 of markdown files that an AI agent ingests as context, after which it can assist in developing a
 separate, independently-maintained target project. The instructions cover system loading, project
-bootstrapping, specification derivation, iterative task execution, and completion review.
+bootstrapping, development plan tasks derivation and iterative execution, specification derivation,
+and completion review.
 
 Collaboration between the user and the agent is central to the workflow: the user remains in
-control at every step, reviewing outputs and making decisions, while the agent implements tasks,
-runs quality checks, manages the development state, and commits results to git.
+control at every step, reviewing outputs, making decisions and requesting changes, while the agent
+implements tasks, runs quality checks, manages the development state, and commits results to git.
 
 ---
 
 ## Scope
 
-sdd-conductor is an agent-agnostic development assistant best suited for small,
+sdd-conductor is an agent-agnostic development assistant **especially** suited for small,
 single-language projects — prototypes, CLI tools, or well-bounded libraries — whose
 full scope can be articulated as a specification upfront and whose implementation
 can be decomposed into a linear sequence of tasks.
 
-It is not currently designed for:
-- Multi-language projects (one language per project is assumed).
-- Large or complex codebases where architectural decisions emerge during development.
-- Projects requiring parallel task execution or team workflows.
-- Exploratory or research-style work where requirements are inherently open-ended.
-
 Features include:
+- During bootstrap, a git-ignored infrastructure dir is created, `.sdd-conductor`.
 - Derivation of an ordered task plan from a project specification
 (greenfield), or agentic inference of specification and architecture from an existing
 codebase (brownfield).
@@ -35,10 +31,19 @@ codebase (brownfield).
 - Lifecycle stage computation from artifacts (enabling session recovery).
 - Specification-pivoting with full state archiving.
 - User-controlled task plan review and modification prior to execution.
-- Mid-execution task injection via `//inject_task`: classify the request, optionally extend the spec minimally, design any preparatory tasks needed to reconcile with completed work, and prepend everything to the task queue.
+- Mid-execution task injection via `//inject_task`: classify the request, optionally extend the spec
+minimally, design any preparatory tasks needed to reconcile with completed work, and prepend
+everything to the task queue.
 - Task rollback via non-destructive `git revert`.
 - Blocked state with explicit unblock flow.
 - Version tracking.
+
+Current design does not yet fully support:
+- Multi-language projects (one language per project is assumed).
+- Large or complex codebases where architectural decisions emerge during development / along the
+project lifecycle.
+- Projects requiring parallel task execution or team workflows.
+- Exploratory or research-style work where requirements are inherently open-ended.
 
 ---
 
@@ -46,18 +51,22 @@ codebase (brownfield).
 
 sdd-conductor supports both new and pre-existing projects.
 
-For **new projects**, the user defines goals in a structured specification file. The agent derives
-an ordered task list from that specification and executes tasks one by one — running quality checks
-and committing each result — until the project is complete.
+For **new projects**, the user defines goals in a structured specification file, possibly assisted
+by the agent who is fully aware of what the specification file will later be used for. From that=
+specification, the agent derives an ordered task list. It then and executes them one by one. This is
+done following a tight execution plan, running quality checks and finally committing the result as a
+separate git commit, all done autonomously by the agent and finally left to the user for
+confirmation. This process is iterated over and over until the project is complete. The human
+developer is always kept in the loop, allowed to introduce changes or secondary tasks where they
+deem necessary. The agent pushes back if inconsistencies would thus be introudced.
 
 For **pre-existing projects**, the agent explores the existing codebase, infers the project
-specification, documents the current architecture and module boundaries, and summarises the current
+specification, documents the current architecture and module boundaries, and summarizes the current
 development state. The user reviews and refines the inferred spec before task derivation begins.
 
-Key capabilities:
-
+#### Key capabilities:
 - **Lifecycle stage tracking.** The project's stage is computed at runtime from the filesystem
-  state of `.project-sdd/` — no stored state file. Stages are `uninitialized`, `bootstrapped`,
+  state of `.sdd-conductor/` — no stored state file. Stages are `uninitialized`, `bootstrapped`,
   `plan_is_ready`, `in_progress`, `blocked`, and `complete`. Commands are gated by stage, and
   session startup loads only the context relevant to the current stage.
 
@@ -87,10 +96,9 @@ language" below.
 `master.md` is the entry point. The agent reads it first and follows recursive inclusion
 instructions until the full system is loaded. From that point it can accept commands.
 
-The `.project-sdd/` directory (e.g. `.foo-sdd` for a project called `foo`, or `.my-project-sdd` for
-a project called `my-project` or `my_project`) is created by `bootstrap` inside the target project
-and is gitignored. It holds the specification, architecture documentation, module boundaries,
-and all task-state files.
+The `.sdd-conductor/` directory is created by `bootstrap` inside the target project and is
+gitignored. It holds the specification, architecture documentation, module boundaries, and all
+task-state files.
 
 ---
 
@@ -116,19 +124,18 @@ Navigate to your target project directory and tell the agent:
 
 > `//bootstrap`
 
-The agent creates `.<project-name>-sdd/` with all required template files and adds it to
-`.gitignore`.
+The agent creates `.sdd-conductor/` with all required template files and adds it to `.gitignore`.
 
 **3. Define your spec**
 
-Open `.<project-name>-sdd/project.md` and fill in the `*GOALS*`, `*NON-GOALS*`, `*CONSTRAINTS*`, and
+Open `.sdd-conductor/project.md` and fill in the `*GOALS*`, `*NON-GOALS*`, `*CONSTRAINTS*`, and
 `*SUCCESS CRITERIA*` sections. Additional sections may be added as needed.
 
 **4. Derive tasks**
 
 > `//derive_tasks`
 
-The agent validates the spec, then populates `<project-name>-sdd/tasks/` with the task list. The first
+The agent validates the spec, then populates `.sdd-conductor/tasks/` with the task list. The first
 task goes to `next_task.md`; the rest go to `pending_tasks.md`.
 
 **5. Execute tasks**
@@ -141,9 +148,9 @@ commits. Repeat after reviewing each result.
 
 **6. Completion**
 
-When `.project-sdd/tasks/pending_tasks.md` has no task entries, all tasks have been completed.
+When `.sdd-conductor/tasks/pending_tasks.md` has no task entries, all tasks have been completed.
 Manually run and review the target project to confirm it meets the goals defined in
-`.project-sdd/project.md`.
+`.sdd-conductor/project.md`.
 
 ---
 
@@ -179,7 +186,7 @@ the agent should execute it.
 
 | Keyword | Required stage | Description |
 |---|---|---|
-| `bootstrap` | `uninitialized` | Create `.project-sdd/` with all template files |
+| `bootstrap` | `uninitialized` | Create `.sdd-conductor/` with all template files |
 | `derive_project_spec` | `bootstrapped` | Infer spec and architecture from an existing codebase; pause for review |
 | `derive_tasks` | `bootstrapped` | Validate spec, derive ordered task list, populate `tasks/` |
 | `reset_plan` | `plan_is_ready` | Discard the current derived task plan and return to `bootstrapped` state for re-derivation |
@@ -276,10 +283,10 @@ mid-session change was a user-requested task split — "done" and "delete" were 
 task and were separated before execution began. Beyond that, the project proceeded linearly from
 `bootstrapped` to `complete` across nine committed tasks.
 
-> **Note on `.todo-cli-sdd/`**: in a real project the `.todo-cli-sdd/` directory would be listed
+> **Note on `.sdd-conductor/`**: in a real project the `.sdd-conductor/` directory would be listed
 > in `.gitignore` and never committed — this is the standard sdd-conductor workflow, as described
-> in `templates/main.md` and `git/main.md`. It is intentionally included here, with its
-> `.gitignore` entry removed, so that the full development artifact is visible as part of the
+> in `templates/main.md` and `git/main.md`. It is intentionally included here, without a
+> `.gitignore` entry for it, so that the full development artifact is visible as part of the
 > example.
 
 ---

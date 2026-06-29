@@ -11,7 +11,7 @@ WORK AFTER USER HAS CONFIRMED THEY WERE CORRECTLY NOTIFIED.**
 # Rollback task
 
 This command undoes exactly the last completed task. It reverts the corresponding code commit and
-restores all `.project-sdd/` artifacts to the state they were in immediately before that task was
+restores all `.sdd-conductor/` artifacts to the state they were in immediately before that task was
 executed. The project returns to `in_progress` (or `plan_is_ready` if the first-ever task is being
 rolled back).
 
@@ -31,8 +31,8 @@ other reason. The task is restored as the first entry of `pending_tasks.md` and 
    tracked files; disregard untracked files. If any uncommitted changes to tracked files exist,
    inform the user and stop immediately. A clean working tree is required before a rollback.
 
-3. **Assert no spec divergence**. Read `.project-sdd/project.md` and
-   `.project-sdd/project_snapshot.md`. If their contents differ, the specification has been
+3. **Assert no spec divergence**. Read `.sdd-conductor/project.md` and
+   `.sdd-conductor/project_snapshot.md`. If their contents differ, the specification has been
    modified since the current task plan was derived. Rolling back a task while the spec is
    diverged is unsafe because the pending task list may no longer be coherent with the spec.
    Inform the user of this and instruct them to resolve the spec divergence first by running
@@ -40,13 +40,13 @@ other reason. The task is restored as the first entry of `pending_tasks.md` and 
    Stop immediately.
 
    Note: this check also prevents rollback across spec pivot boundaries. After a spec pivot,
-   all completed tasks from the previous spec era are archived to `.project-sdd/old_versions/`
-   and deleted from `.project-sdd/tasks/`. The only `completed_task_N.md` files present are from
+   all completed tasks from the previous spec era are archived to `.sdd-conductor/old_versions/`
+   and deleted from `.sdd-conductor/tasks/`. The only `completed_task_N.md` files present are from
    the current spec era, so a rollback always stays within that era. No additional check is
    needed for this.
 
 4. **Identify last completed task**. Find the highest-numbered `completed_task_N.md` file in
-   `.project-sdd/tasks/completed_tasks/`. Read it. Extract the commit hash from its `## Commit` section. If the
+   `.sdd-conductor/tasks/completed_tasks/`. Read it. Extract the commit hash from its `## Commit` section. If the
    `## Commit` section is missing, inform the user that the file predates the commit-hash
    recording requirement and that the rollback cannot proceed automatically; the user must
    identify and revert the correct commit manually. Stop immediately.
@@ -60,23 +60,23 @@ other reason. The task is restored as the first entry of `pending_tasks.md` and 
    pre-task state by creating a new revert commit. Do not use `git reset`; history must not be
    rewritten.
 
-7. **Restore `.project-sdd/tasks/` state**. Prepend the content of `completed_task_N.md`, minus
-   the `## Commit` section, as the new first entry of `.project-sdd/tasks/pending_tasks.md`. If
+7. **Restore `.sdd-conductor/tasks/` state**. Prepend the content of `completed_task_N.md`, minus
+   the `## Commit` section, as the new first entry of `.sdd-conductor/tasks/pending_tasks.md`. If
    `pending_tasks.md` already has task entries, insert a `---` separator line between the restored
    task and the existing content. Delete `completed_task_N.md` from
-   `.project-sdd/tasks/completed_tasks/` afterwards.
+   `.sdd-conductor/tasks/completed_tasks/` afterwards.
 
 8. **Re-derive `current_state.md`**. Read all remaining `completed_task_1.md` through
-   `completed_task_{N-1}.md` files in `.project-sdd/tasks/completed_tasks/` together with the now-reverted code. Synthesise a new
+   `completed_task_{N-1}.md` files in `.sdd-conductor/tasks/completed_tasks/` together with the now-reverted code. Synthesise a new
    compressed narrative description of the current state of the codebase and write it to the
-   DESCRIPTION section of `.project-sdd/tasks/current_state.md`. Set the STATUS section to
+   DESCRIPTION section of `.sdd-conductor/tasks/current_state.md`. Set the STATUS section to
    `NOT BLOCKED`. The file must continue to satisfy `schemas/current_state.json`.
 
    If no completed tasks remain (i.e. N was 1), reset the DESCRIPTION section to
    `(EMPTY — NO TASKS HAVE BEEN COMPLETED YET)` and set STATUS to `NOT BLOCKED`.
 
 9. **Re-derive `architecture.md` and `modules.md`**. Inspect the now-reverted code. If
-   `.project-sdd/architecture.md` or `.project-sdd/modules.md` no longer accurately reflects the
+   `.sdd-conductor/architecture.md` or `.sdd-conductor/modules.md` no longer accurately reflects the
    reverted codebase — because the rolled-back task had updated either file — rewrite the
    affected file as a compressed, accurate description of the current (reverted) state. Leave a
    file unchanged if it still accurately reflects the code. Warn the user that any rewritten

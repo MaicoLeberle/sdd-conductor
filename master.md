@@ -33,21 +33,16 @@ look like this:
     instructed in the files.
     - **Initialize AI-infrastructure**. Bootstrapping the AI-assisted
     development process by copying the files in the `templates` directory of this
-    project into a dedicated, gitignored directory called `.project-sdd`.
-        - NOTE: `.project-sdd` is a placeholder name that should be replaced throughout with the
-        string created by replacing prefix "project" with the actual target project name, all in
-        small letters and replacing `_` (underscores) with `-` (dashes). For example, if the target
-        project is called "my_project", then directory `.project-sdd` is actually referring to
-        `.my-project-sdd`. 
-    with the actual name of the target project in its root directory.
+    project into a dedicated, gitignored directory called `.sdd-conductor`, created at the root of
+    the target project.
     - **Defining the goals of the target project**. Manually filling the goals
-    section in `.project-sdd/project.md` (along with any of the other sections if
+    section in `.sdd-conductor/project.md` (along with any of the other sections if
     a greater level of details is required in any way). For pre-existing projects
     with code already in place, run `derive_project_spec` instead: the agent will
     infer the spec, architecture, and module boundaries from the codebase and
     pause for review before task derivation.
     - **Deriving the tasks**. Requesting the AI agent to derive the list of
-    tasks from `.project-sdd/project.md`, as defined in the `tasks` directory.
+    tasks from `.sdd-conductor/project.md`, as defined in the `tasks` directory.
     - **Executing the tasks**. Executing one by one the tasks, using the
     commands for such goal and manually reviewing the execution results before
     proceeding with the following task.

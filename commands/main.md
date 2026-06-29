@@ -49,7 +49,7 @@ immediately.
 #### *Show next task*
 - **Required stage**: `plan_is_ready`, `in_progress`, or `blocked`. If not, inform the user of the
 current stage and stop execution immediately.
-- **Description**: Return the first task entry in `.project-sdd/tasks/pending_tasks.md`: title,
+- **Description**: Return the first task entry in `.sdd-conductor/tasks/pending_tasks.md`: title,
 description and completion criteria. If there are no task entries, say it. Stop execution
 immediately.
 - **Keyword**: `show_next_task`
@@ -62,7 +62,7 @@ immediately.
 - **Required stage**: `plan_is_ready`, `in_progress`, or `blocked`. If not, inform the user of the
 current stage and stop execution immediately.
 - **Description**: Create a list of task titles from all entries in
-`.project-sdd/tasks/pending_tasks.md`, respecting the order in that file. If there are no task
+`.sdd-conductor/tasks/pending_tasks.md`, respecting the order in that file. If there are no task
 entries, say it. Stop execution immediately.
 - **Keyword**: `show_pending_tasks`
 

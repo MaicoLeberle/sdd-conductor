@@ -23,12 +23,12 @@ front of the pending task queue for immediate execution.
    immediately.
 
 2. **Read context**. Read the following files:
-   - `.project-sdd/project.md` — current project specification.
-   - `.project-sdd/architecture.md` — current architecture.
-   - `.project-sdd/modules.md` — current module boundaries.
-   - `.project-sdd/tasks/current_state.md` — current development state.
-   - `.project-sdd/tasks/pending_tasks.md` — the ordered list of pending tasks.
-   - All `.project-sdd/tasks/completed_tasks/completed_task_*.md` files, if any exist — to
+   - `.sdd-conductor/project.md` — current project specification.
+   - `.sdd-conductor/architecture.md` — current architecture.
+   - `.sdd-conductor/modules.md` — current module boundaries.
+   - `.sdd-conductor/tasks/current_state.md` — current development state.
+   - `.sdd-conductor/tasks/pending_tasks.md` — the ordered list of pending tasks.
+   - All `.sdd-conductor/tasks/completed_tasks/completed_task_*.md` files, if any exist — to
      understand what has already been built.
 
 3. **Classify the request**. Analyze the change request against the full context just loaded.
@@ -47,10 +47,10 @@ front of the pending task queue for immediate execution.
    and that they may submit a revised request. Stop execution immediately.
 
 5. **Category B — Propose spec update**. Formulate the minimal set of edits to
-   `.project-sdd/project.md` required to accommodate the change. Add or refine only the
+   `.sdd-conductor/project.md` required to accommodate the change. Add or refine only the
    statements directly needed; do not restructure or expand the spec beyond what the change
-   strictly requires. Propose edits to `.project-sdd/architecture.md` and
-   `.project-sdd/modules.md` only if the change has structural implications that make them
+   strictly requires. Propose edits to `.sdd-conductor/architecture.md` and
+   `.sdd-conductor/modules.md` only if the change has structural implications that make them
    strictly necessary.
 
    Present the proposed spec edits to the user and ask for confirmation. Incorporate any
@@ -82,14 +82,14 @@ front of the pending task queue for immediate execution.
 
 9. **Apply changes**.
    - If Category B:
-     - Apply the confirmed edits to `.project-sdd/project.md`.
-     - Apply any confirmed edits to `.project-sdd/architecture.md` and
-       `.project-sdd/modules.md`, if applicable.
-     - Overwrite `.project-sdd/project_snapshot.md` with the updated content of
-       `.project-sdd/project.md`, so that the spec-divergence check in `execute_next_task`
+     - Apply the confirmed edits to `.sdd-conductor/project.md`.
+     - Apply any confirmed edits to `.sdd-conductor/architecture.md` and
+       `.sdd-conductor/modules.md`, if applicable.
+     - Overwrite `.sdd-conductor/project_snapshot.md` with the updated content of
+       `.sdd-conductor/project.md`, so that the spec-divergence check in `execute_next_task`
        does not trigger for this authorized change.
    - Prepend the new tasks (preparatory tasks, if any, followed by the user-requested task) to
-     `.project-sdd/tasks/pending_tasks.md`. If `pending_tasks.md` already has task entries,
+     `.sdd-conductor/tasks/pending_tasks.md`. If `pending_tasks.md` already has task entries,
      insert a `---` separator line between the last prepended task and the existing content.
 
 10. **Report**. Inform the user which tasks were prepended and that the project is ready for

@@ -25,5 +25,5 @@ effectively handled by the agent.
 ## Validation
 Validations schemas for the different artifacts used by this project in the development process of
 the target project:
-- `.project-sdd/project.md` in the target repository must satisfy `schemas/project.json`.
-- `.project-sdd/tasks/current_state.md` in the target repository must satisfy `schemas/current_state.json`.
+- `.sdd-conductor/project.md` in the target repository must satisfy `schemas/project.json`.
+- `.sdd-conductor/tasks/current_state.md` in the target repository must satisfy `schemas/current_state.json`.

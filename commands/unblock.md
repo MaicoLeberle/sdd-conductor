@@ -21,11 +21,11 @@ fail, the project remains blocked and the user is informed of the remaining fail
    `blocked`. If not, inform the user of the current stage and stop execution immediately.
 
 2. **Read context**. Read the following files to restore the necessary context:
-   - `.project-sdd/project.md` — current project specification.
-   - `.project-sdd/architecture.md` — current architecture.
-   - `.project-sdd/modules.md` — current module boundaries.
-   - `.project-sdd/tasks/current_state.md` — current development state (STATUS is `BLOCKED`).
-   - `.project-sdd/tasks/pending_tasks.md` — the first entry is the task whose QA failure caused
+   - `.sdd-conductor/project.md` — current project specification.
+   - `.sdd-conductor/architecture.md` — current architecture.
+   - `.sdd-conductor/modules.md` — current module boundaries.
+   - `.sdd-conductor/tasks/current_state.md` — current development state (STATUS is `BLOCKED`).
+   - `.sdd-conductor/tasks/pending_tasks.md` — the first entry is the task whose QA failure caused
      the block.
    - Any language-specific files relevant to the target project (located in the `languages/`
      directory of this project).
@@ -34,10 +34,10 @@ fail, the project remains blocked and the user is informed of the remaining fail
    project (the "QA checks" section). Do not skip any check.
 
 4. **Evaluate results**.
-   - **If all checks pass**: set the STATUS section of `.project-sdd/tasks/current_state.md` to
+   - **If all checks pass**: set the STATUS section of `.sdd-conductor/tasks/current_state.md` to
      `NOT BLOCKED`. Inform the user that the block has been resolved and that they may now proceed
      with `execute_next_task`. Stop execution immediately.
-   - **If any check fails**: do not modify `.project-sdd/tasks/current_state.md`. Report to the
+   - **If any check fails**: do not modify `.sdd-conductor/tasks/current_state.md`. Report to the
      user exactly which checks failed and what the failures were. Inform the user that the project
      remains blocked and that they must address the failures before running `unblock` again. Stop
      execution immediately.

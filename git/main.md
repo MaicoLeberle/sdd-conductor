@@ -15,8 +15,7 @@ the cleanness of the working tree.
 * After completion, each task should be made into a commit. Only the changes related to the task may
 be added into the commit.
 * Do not EVER push changes, force push changes, rebase or modify git history.
-* Do not commit any part or the totality of directory `.project-sdd` (where `project` is the name of
-the target project)
+* Do not commit any part or the totality of directory `.sdd-conductor`.
 * COMMIT MESSAGES. These should be done using infinitive verbs and kept as simple as possible. No
 big explanations, just mere, short titles to the task handled in the commit. The first letter of the
 commit message is lower case. Example of a commit message "implement database storage feature".
