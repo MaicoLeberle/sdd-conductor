@@ -26,3 +26,4 @@ language-specific file takes precedence. Inform the user that language-specific 
 configuration was found and is in effect. If no file exists for the target language, the
 defaults above apply as-is.
 - tests/Rust.md
+- tests/Haskell.md

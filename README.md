@@ -226,6 +226,7 @@ git/
 
 #### Currently supported programming languages:
 - **Rust**
+- **Haskell**
 
 #### How to support a new programming language:
 Any language can be used without configuration files. The agent applies generic defaults for code

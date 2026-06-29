@@ -32,3 +32,4 @@ If no language-specific file exists for the target language, apply the generic d
 as-is. Inform the user that no language-specific configuration was found and that generic defaults
 are in effect.
 - Rust.md
+- Haskell.md
