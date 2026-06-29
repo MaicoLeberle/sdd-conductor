@@ -1,0 +1,22 @@
+{
+  "required_sections": [
+    {
+      "name": "*GOALS*",
+      "allow_empty": false
+    },
+    {
+      "name": "*NON-GOALS*",
+      "allow_empty": true
+    },
+    {
+      "name": "*CONSTRAINTS*",
+      "allow_empty": false,
+      "note": "Must specify the programming language for development. This is required by languages/main.md and validated here."
+    },
+    {
+      "name": "*SUCCESS CRITERIA*",
+      "allow_empty": true
+    }
+  ],
+  "allow_additional_sections": true
+}

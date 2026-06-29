@@ -1,0 +1,13 @@
+{
+  "required_sections": [
+    {
+      "name": "STATUS",
+      "allow_empty": false,
+      "allowed_values": ["BLOCKED", "NOT BLOCKED"]
+    },
+    {
+      "name": "DESCRIPTION",
+      "allow_empty": false
+    }
+  ]
+}
