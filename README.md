@@ -276,6 +276,12 @@ mid-session change was a user-requested task split — "done" and "delete" were 
 task and were separated before execution began. Beyond that, the project proceeded linearly from
 `bootstrapped` to `complete` across nine committed tasks.
 
+> **Note on `.todo-cli-sdd/`**: in a real project the `.todo-cli-sdd/` directory would be listed
+> in `.gitignore` and never committed — this is the standard sdd-conductor workflow, as described
+> in `templates/main.md` and `git/main.md`. It is intentionally included here, with its
+> `.gitignore` entry removed, so that the full development artifact is visible as part of the
+> example.
+
 ---
 
 ## Contributing

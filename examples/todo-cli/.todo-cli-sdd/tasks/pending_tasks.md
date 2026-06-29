@@ -1,0 +1,5 @@
+[AGENT-MANAGED FILE — DO NOT MODIFY MANUALLY]
+
+# Pending tasks
+
+(none)
