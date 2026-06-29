@@ -12,7 +12,9 @@ implements tasks, runs quality checks, manages the development state, and commit
 
 ---
 
-## Scope
+# What it does
+
+#### Scope
 
 sdd-conductor is an agent-agnostic development assistant **especially** suited for small,
 single-language projects — prototypes, CLI tools, or well-bounded libraries — whose
@@ -47,12 +49,9 @@ project lifecycle.
 
 ---
 
-## What it does
-
-sdd-conductor supports both new and pre-existing projects.
-
-For **new projects**, the user defines goals in a structured specification file, possibly assisted
-by the agent who is fully aware of what the specification file will later be used for. From that=
+#### Suport for new projects
+The user defines goals in a structured specification file, possibly assisted
+by the agent who is fully aware of what the specification file will later be used for. From that
 specification, the agent derives an ordered task list. It then and executes them one by one. This is
 done following a tight execution plan, running quality checks and finally committing the result as a
 separate git commit, all done autonomously by the agent and finally left to the user for
@@ -60,11 +59,13 @@ confirmation. This process is iterated over and over until the project is comple
 developer is always kept in the loop, allowed to introduce changes or secondary tasks where they
 deem necessary. The agent pushes back if inconsistencies would thus be introudced.
 
-For **pre-existing projects**, the agent explores the existing codebase, infers the project
+#### Support for pre-existing projects
+The agent explores the existing codebase, infers the project
 specification, documents the current architecture and module boundaries, and summarizes the current
 development state. The user reviews and refines the inferred spec before task derivation begins.
 
 #### Key capabilities:
+
 - **Lifecycle stage tracking.** The project's stage is computed at runtime from the filesystem
   state of `.sdd-conductor/` — no stored state file. Stages are `uninitialized`, `bootstrapped`,
   `plan_is_ready`, `in_progress`, `blocked`, and `complete`. Commands are gated by stage, and
@@ -91,7 +92,35 @@ language" below.
 
 ---
 
-## How it works
+# Commands
+
+#### Syntax
+
+Commands are invoked using a double-slash prefix, namely `//<command>`. The double slash prefix
+explicitly targets the sdd-conductor command set, bypassing any built-in command syntax the
+agent may have (which typically starts with a single slash). Enter these commands in the prompt and
+the agent should execute it.
+
+#### Command reference
+
+| Keyword | Required stage | Description |
+|---|---|---|
+| `bootstrap` | `uninitialized` | Create `.sdd-conductor/` with all template files |
+| `derive_project_spec` | `bootstrapped` | Infer spec and architecture from an existing codebase; pause for review |
+| `derive_tasks` | `bootstrapped` | Validate spec, derive ordered task list, populate `tasks/` |
+| `reset_plan` | `plan_is_ready` | Discard the current derived task plan and return to `bootstrapped` state for re-derivation |
+| `show_next_task` | `plan_is_ready`, `in_progress`, or `blocked` | Print the next task: title, description, completion criteria |
+| `show_pending_tasks` | `plan_is_ready`, `in_progress`, or `blocked` | Print the ordered list of pending task titles |
+| `execute_next_task` | `plan_is_ready` or `in_progress` | Implement the next task, run QA checks, update state, commit |
+| `inject_task` | `plan_is_ready` or `in_progress` | Classify a change request; prepend any preparatory tasks and the user-requested task to the queue |
+| `unblock` | `blocked` | Re-run QA checks; clear the block if all pass, otherwise report remaining failures |
+| `rollback_task` | `in_progress` or `complete` | Revert the last completed task's commit and restore all orchestration state to its pre-task condition |
+| `show_stage` | any | Compute and report the current lifecycle stage |
+| `help` | any | Print the full command reference table |
+
+---
+
+# Repository structure
 
 `master.md` is the entry point. The agent reads it first and follows recursive inclusion
 instructions until the full system is loaded. From that point it can accept commands.
@@ -102,7 +131,43 @@ task-state files.
 
 ---
 
-## Quickstart
+```
+master.md                    Entry point. The agent reads this first and proceeds recursively
+lifecycle/
+    main.md                  Lifecycle stage definitions, runtime computation, and session recovery
+commands/
+    main.md                  Command registry: keywords, preconditions, and descriptions
+    derive_project_spec.md   Instructions for the derive_project_spec command
+    unblock.md               Instructions for the unblock command
+tasks/
+    main.md                  Task artifact definitions (pending tasks, current state, completed
+                             tasks, etc.)
+    derive_tasks.md          Instructions for the derive_tasks command
+    task_execution.md        Instructions for the execute_next_task command
+    rollback_task.md         Instructions for the rollback_task command
+    inject_task.md           Instructions for the inject_task command
+schemas/                     Schemas that specific artifacts must satisfy
+    main.md                  Schema-validation logic
+    project.json             Schema for project.md
+    current_state.json       Schema for current_state.md
+templates/                   Template files copied into .sdd-conductor during bootstrap
+    README.md                Starter template for the target project's public docs/README.md
+languages/                   Supported programming languages. One file per language
+    main.md                  Global programming language code style, dependencies, etc.
+tests/                       Test suite instructions (default + language-specific)
+    main.md                  Default test suite instructions
+    Rust.md                  Rust-specific suite instructions
+documentation/               Documentation instructions (default + language-specific)
+logging/                     Logging configuration (default + language-specific)
+    Rust.md                  Rust-specific logging configuration
+    Haskell.md               Haskell-specific logging configuration
+git/
+    main.md                  Git versioning rules
+```
+
+---
+
+# Quickstart
 
 **Prerequisites:** Claude Code (or any AI agent with file-read, file-write and shell-execution
 capabilities), `git`. Developed and tested with Claude Code; any agent with file-read, file-write,
@@ -173,62 +238,27 @@ Edit those files as needed, then continue:
 
 ---
 
-## Commands
+## Examples
 
-### Syntax
+#### todo-cli
 
-Commands are invoked using a double-slash prefix, namely `//<command>`. The double slash prefix
-explicitly targets the sdd-conductor command set, bypassing any built-in command syntax the
-agent may have (which typically starts with a single slash). Enter these commands in the prompt and
-the agent should execute it.
+`examples/todo-cli` is a Rust CLI todo manager built end-to-end using sdd-conductor. It stores tasks
+as JSON, supports four subcommands (`list`, `add`, `done`, `delete`), and is split across two
+modules (`tasks.rs` for the data model and storage layer, `main.rs` for CLI dispatch).
 
-### Command reference
+The session was straightforward: the spec was defined upfront, tasks were derived once without any
+pivots, and each task was executed in order without rollbacks or blocked states. Mid-session changes
+were requested by the user, first asking task split prior to executing the first task (`done` and
+`delete` were originally a single task and were separated), and then injecting a task mid-way
+(requesting a module refactor, creating the `tasks` module - see `completed_task_5.md`).
+Beyond that, the project proceeded linearly from `bootstrapped` to `complete` across nine committed
+tasks.
 
-| Keyword | Required stage | Description |
-|---|---|---|
-| `bootstrap` | `uninitialized` | Create `.sdd-conductor/` with all template files |
-| `derive_project_spec` | `bootstrapped` | Infer spec and architecture from an existing codebase; pause for review |
-| `derive_tasks` | `bootstrapped` | Validate spec, derive ordered task list, populate `tasks/` |
-| `reset_plan` | `plan_is_ready` | Discard the current derived task plan and return to `bootstrapped` state for re-derivation |
-| `show_next_task` | `plan_is_ready`, `in_progress`, or `blocked` | Print the next task: title, description, completion criteria |
-| `show_pending_tasks` | `plan_is_ready`, `in_progress`, or `blocked` | Print the ordered list of pending task titles |
-| `execute_next_task` | `plan_is_ready` or `in_progress` | Implement the next task, run QA checks, update state, commit |
-| `inject_task` | `plan_is_ready` or `in_progress` | Classify a change request; prepend any preparatory tasks and the user-requested task to the queue |
-| `unblock` | `blocked` | Re-run QA checks; clear the block if all pass, otherwise report remaining failures |
-| `rollback_task` | `in_progress` or `complete` | Revert the last completed task's commit and restore all orchestration state to its pre-task condition |
-| `show_stage` | any | Compute and report the current lifecycle stage |
-| `help` | any | Print the full command reference table |
-
----
-
-## Repository structure
-
-```
-master.md                    Entry point. The agent reads this first and proceeds recursively.
-lifecycle/
-  main.md                    Lifecycle stage definitions, runtime computation, and session recovery.
-commands/
-  main.md                    Command registry: keywords, preconditions, and descriptions.
-  derive_project_spec.md     Steps for the derive_project_spec command.
-  unblock.md                 Steps for the unblock command.
-tasks/
-  main.md                    Task artifact definitions (pending tasks, current state, completed tasks, etc.).
-  derive_tasks.md            Steps for the derive_tasks command.
-  task_execution.md          Step-by-step instructions for execute_next_task.
-  rollback_task.md           Step-by-step instructions for rollback_task.
-  inject_task.md             Steps for the inject_task command.
-schemas/
-  project.json               Schema that project.md must satisfy.
-  current_state.json         Schema that current_state.md must satisfy.
-templates/                   Template files copied into each new target project during bootstrap.
-  README.md                  Starter template for the target project's public docs/README.md.
-languages/                   Supported programming languages. One file per language.
-tests/                       Test suite instructions. Default and language-specific.
-documentation/               Documentation instructions. Default and language-specific.
-logging/                     Logging configuration. Default and language-specific.
-git/
-  main.md                    Git versioning rules.
-```
+> **Note on `.sdd-conductor/`**: in a real project the `.sdd-conductor/` directory would be listed
+> in `.gitignore` and never committed — this is the standard sdd-conductor workflow, as described
+> in `templates/main.md` and `git/main.md`. It is intentionally included here, without a
+> `.gitignore` entry for it, so that the full development artifact is visible as part of the
+> example.
 
 ---
 
@@ -239,24 +269,28 @@ git/
 - **Haskell**
 
 #### How to support a new programming language:
-Any language can be used without configuration files. The agent applies generic defaults for code
+- Any language can be used without configuration files. The agent applies generic defaults for code
 style, error handling, QA checks, tests, documentation, and logging — inferred from standard
 practice for the detected language.
+- To add explicit configuration for language `A`, three levels are available:
+    - **No files**: generic defaults apply for everything.
+    - **Support with general configuration**: only `languages/A.md` is provided and included in the
+    list in `languages/main.md`. `lnaguages/A.md` includes explicit code style, error handling, and
+    QA check instructions (specific tool names and commands) for this specific programming language
+    `A`. These new values override the default configuration for `A` in each dimension mentioned in
+    `languages/A.md`, and leave untouched the all the other configuration dimensiones (for which the
+    default values will be used). However, tests, documentation, and logging continue to use generic
+    defaults.
 
-To add explicit configuration for language `A`, three levels are available:
-
-**No files** — generic defaults apply for everything.
-
-**`languages/A.md` only** — provides explicit code style, error handling, and QA check
-instructions (specific tool names and commands) for `A`. Tests, documentation, and logging continue
-to use generic defaults. Add `A.md` to the list in `languages/main.md`.
-
-**`languages/A.md` plus any of the following** — `languages/A.md` must exist for these to be
-meaningful:
-- **`tests/A.md`**: language-specific test suite instructions. Add it to the list in `tests/main.md`.
-- **`documentation/A.md`**: language-specific documentation instructions. Add it to the list in
-  `documentation/main.md`.
-- **`logging/A.md`**: language-specific logging instructions. Add it to the list in `logging/main.md`.
+    - **Suport with general + specific configuration**. If `languages/A.md` exists and adde in the
+    list in `languages/main.md`, more specific configuration can be given to `A` by adding any of
+    the following:
+        - **`tests/A.md`**: language-specific test suite instructions. Add it to the list in
+        `tests/main.md`.
+        - **`documentation/A.md`**: language-specific documentation instructions. Add it to the list
+        in `documentation/main.md`.
+        - **`logging/A.md`**: language-specific logging instructions. Add it to the list in
+        `logging/main.md`.
 
 Language-specific files extend the generic defaults; where there is overlap they take precedence.
 The agent informs the user which configuration files were found and are in effect at load time.
@@ -266,28 +300,6 @@ The agent informs the user which configuration files were found and are in effec
 ## Requirements
 
 Any AI agent with file-read, file-write, and shell-execution capabilities, and `git`.
-
----
-
-## Examples
-
-### todo-cli
-
-`examples/todo-cli` is a Rust CLI todo manager built end-to-end using sdd-conductor. It
-supports four subcommands (`add`, `list`, `done`, `delete`), stores tasks as JSON, and is split
-across two modules (`tasks.rs` for the data model and storage layer, `main.rs` for CLI dispatch).
-
-The session was straightforward: the spec was defined upfront, tasks were derived once without
-any pivots, and each task was executed in order without rollbacks or blocked states. The only
-mid-session change was a user-requested task split — "done" and "delete" were originally a single
-task and were separated before execution began. Beyond that, the project proceeded linearly from
-`bootstrapped` to `complete` across nine committed tasks.
-
-> **Note on `.sdd-conductor/`**: in a real project the `.sdd-conductor/` directory would be listed
-> in `.gitignore` and never committed — this is the standard sdd-conductor workflow, as described
-> in `templates/main.md` and `git/main.md`. It is intentionally included here, without a
-> `.gitignore` entry for it, so that the full development artifact is visible as part of the
-> example.
 
 ---
 
