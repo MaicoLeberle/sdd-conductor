@@ -66,6 +66,12 @@ current stage and stop execution immediately.
 entries, say it. Stop execution immediately.
 - **Keyword**: `show_pending_tasks`
 
+#### *Inject task*
+- **Description**: "Inject task" section in `tasks/inject_task.md`. If this was carried out
+successfully, stop execution immediately. Else, inform what was wrong and stop execution
+immediately.
+- **Keyword**: `inject_task`
+
 #### *Unblock*
 - **Description**: "Unblock" section in `commands/unblock.md`. If this was carried out
 successfully, stop execution immediately. Else, inform what was wrong and stop execution

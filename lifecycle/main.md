@@ -76,6 +76,7 @@ execution immediately.
 | `derive_tasks` | `bootstrapped` |
 | `reset_plan` | `plan_is_ready` |
 | `execute_next_task` | `plan_is_ready` or `in_progress` |
+| `inject_task` | `plan_is_ready` or `in_progress` |
 | `unblock` | `blocked` |
 | `rollback_task` | `in_progress` or `complete` |
 | `show_next_task` | `plan_is_ready`, `in_progress`, or `blocked` |

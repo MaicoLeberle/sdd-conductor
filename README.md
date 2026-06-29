@@ -35,6 +35,7 @@ codebase (brownfield).
 - Lifecycle stage computation from artifacts (enabling session recovery).
 - Specification-pivoting with full state archiving.
 - User-controlled task plan review and modification prior to execution.
+- Mid-execution task injection via `//inject_task`: classify the request, optionally extend the spec minimally, design any preparatory tasks needed to reconcile with completed work, and prepend everything to the task queue.
 - Task rollback via non-destructive `git revert`.
 - Blocked state with explicit unblock flow.
 - Version tracking.
@@ -185,6 +186,7 @@ the agent should execute it.
 | `show_next_task` | `plan_is_ready`, `in_progress`, or `blocked` | Print the next task: title, description, completion criteria |
 | `show_pending_tasks` | `plan_is_ready`, `in_progress`, or `blocked` | Print the ordered list of pending task titles |
 | `execute_next_task` | `plan_is_ready` or `in_progress` | Implement the next task, run QA checks, update state, commit |
+| `inject_task` | `plan_is_ready` or `in_progress` | Classify a change request; prepend any preparatory tasks and the user-requested task to the queue |
 | `unblock` | `blocked` | Re-run QA checks; clear the block if all pass, otherwise report remaining failures |
 | `rollback_task` | `in_progress` or `complete` | Revert the last completed task's commit and restore all orchestration state to its pre-task condition |
 | `show_stage` | any | Compute and report the current lifecycle stage |
@@ -207,6 +209,7 @@ tasks/
   derive_tasks.md            Steps for the derive_tasks command.
   task_execution.md          Step-by-step instructions for execute_next_task.
   rollback_task.md           Step-by-step instructions for rollback_task.
+  inject_task.md             Steps for the inject_task command.
 schemas/
   project.json               Schema that project.md must satisfy.
   current_state.json         Schema that current_state.md must satisfy.
