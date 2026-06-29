@@ -32,7 +32,7 @@ other reason. The task is restored as the first entry of `pending_tasks.md` and 
    inform the user and stop immediately. A clean working tree is required before a rollback.
 
 3. **Assert no spec divergence**. Read `.project-sdd/project.md` and
-   `.project-sdd/.project_snapshot.md`. If their contents differ, the specification has been
+   `.project-sdd/project_snapshot.md`. If their contents differ, the specification has been
    modified since the current task plan was derived. Rolling back a task while the spec is
    diverged is unsafe because the pending task list may no longer be coherent with the spec.
    Inform the user of this and instruct them to resolve the spec divergence first by running
@@ -40,7 +40,7 @@ other reason. The task is restored as the first entry of `pending_tasks.md` and 
    Stop immediately.
 
    Note: this check also prevents rollback across spec pivot boundaries. After a spec pivot,
-   all completed tasks from the previous spec era are archived to `.project-sdd/.old_versions/`
+   all completed tasks from the previous spec era are archived to `.project-sdd/old_versions/`
    and deleted from `.project-sdd/tasks/`. The only `completed_task_N.md` files present are from
    the current spec era, so a rollback always stays within that era. No additional check is
    needed for this.

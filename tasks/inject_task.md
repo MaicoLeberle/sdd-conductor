@@ -85,7 +85,7 @@ front of the pending task queue for immediate execution.
      - Apply the confirmed edits to `.project-sdd/project.md`.
      - Apply any confirmed edits to `.project-sdd/architecture.md` and
        `.project-sdd/modules.md`, if applicable.
-     - Overwrite `.project-sdd/.project_snapshot.md` with the updated content of
+     - Overwrite `.project-sdd/project_snapshot.md` with the updated content of
        `.project-sdd/project.md`, so that the spec-divergence check in `execute_next_task`
        does not trigger for this authorized change.
    - Prepend the new tasks (preparatory tasks, if any, followed by the user-requested task) to

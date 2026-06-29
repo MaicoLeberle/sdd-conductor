@@ -45,34 +45,34 @@ style compliance, user notifications, and (most importantly) code generation.
             now be ahead of the code and should be reviewed and manually corrected before proceeding.
     - Read `.project-sdd/project.md` to get the current project specification. Check it satisfies
     `schemas/project.json`.
-    - Check that `.project-sdd/.project_snapshot.md` exists. If it does not, inform the user that
+    - Check that `.project-sdd/project_snapshot.md` exists. If it does not, inform the user that
     the spec snapshot is missing (most likely because `derive_tasks` was never completed or the
     file was deleted), instruct them to re-run `//derive_tasks` to regenerate it, and stop
     execution immediately.
-    - Compare `.project-sdd/project.md` against `.project-sdd/.project_snapshot.md`. If they differ,
+    - Compare `.project-sdd/project.md` against `.project-sdd/project_snapshot.md`. If they differ,
     warn the user that the specification has changed since tasks were derived. Present two options
     and stop until the user chooses:
-        - **Option A — Revert spec**: copy the content of `.project-sdd/.project_snapshot.md` back
+        - **Option A — Revert spec**: copy the content of `.project-sdd/project_snapshot.md` back
         into `.project-sdd/project.md`, restoring the specification that was in effect when the
         current task plan was derived. Resume execution normally.
         - **Option B — Accept new spec**: treat the updated `project.md` as the new specification.
         Proceed as follows:
             1. Determine the next version name by counting existing directories inside
-            `.project-sdd/.old_versions/` and incrementing by one (e.g. `v1`, `v2`, …).
-            2. Create `.project-sdd/.old_versions/<version>/`.
+            `.project-sdd/old_versions/` and incrementing by one (e.g. `v1`, `v2`, …).
+            2. Create `.project-sdd/old_versions/<version>/`.
             3. Copy `.project-sdd/tasks/current_state.md` into
-            `.project-sdd/.old_versions/<version>/current_state.md`.
+            `.project-sdd/old_versions/<version>/current_state.md`.
             4. Copy `.project-sdd/tasks/pending_tasks.md` into
-            `.project-sdd/.old_versions/<version>/pending_tasks.md`.
+            `.project-sdd/old_versions/<version>/pending_tasks.md`.
             5. Copy every `.project-sdd/tasks/completed_tasks/completed_task_*.md` file into
-            `.project-sdd/.old_versions/<version>/`, preserving each file's original name. Then
+            `.project-sdd/old_versions/<version>/`, preserving each file's original name. Then
             delete every `.project-sdd/tasks/completed_tasks/completed_task_*.md`.
             6. Copy `.project-sdd/architecture.md` into
-            `.project-sdd/.old_versions/<version>/architecture.md`.
+            `.project-sdd/old_versions/<version>/architecture.md`.
             7. Copy `.project-sdd/modules.md` into
-            `.project-sdd/.old_versions/<version>/modules.md`.
-            8. Copy `.project-sdd/.project_snapshot.md` into
-            `.project-sdd/.old_versions/<version>/project.md`. This preserves the exact
+            `.project-sdd/old_versions/<version>/modules.md`.
+            8. Copy `.project-sdd/project_snapshot.md` into
+            `.project-sdd/old_versions/<version>/project.md`. This preserves the exact
             specification that governed the now-archived development run.
             9. Reset the STATUS section of `.project-sdd/tasks/current_state.md` to `NOT BLOCKED`.
             10. Re-derive the DESCRIPTION section of `.project-sdd/tasks/current_state.md` to
@@ -83,7 +83,7 @@ style compliance, user notifications, and (most importantly) code generation.
             11. Re-derive tasks from the updated `.project-sdd/project.md` following the same logic
             as `tasks/derive_tasks.md`, but omitting its final snapshot step — that is handled
             exclusively by step 12 below.
-            12. Update `.project-sdd/.project_snapshot.md` with the content of the new
+            12. Update `.project-sdd/project_snapshot.md` with the content of the new
             `.project-sdd/project.md`.
             13. Inform the user that the plan has been re-derived and resume from step 1 of
             "Steps for executing a task".

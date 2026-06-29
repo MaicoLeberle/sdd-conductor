@@ -90,13 +90,13 @@ execution immediately.
 At the start of any new session, compute the current stage before loading any further context.
 The result immediately determines which files still need to be read:
 
-After loading the stage-specific files below, read `.project-sdd/.meta.md` if it exists. Compare
+After loading the stage-specific files below, read `.project-sdd/meta.md` if it exists. Compare
 its `## Version` field to the content of the `VERSION` file in the sdd-conductor repository.
 If they differ, warn the user that the project was bootstrapped with a different version of
 sdd-conductor (state the bootstrapped version and the current version), advise them to
 review the changelog for any breaking changes, and stop execution until the user explicitly
 confirms they wish to proceed. Once the user confirms, update the `## Version` field in
-`.project-sdd/.meta.md` to the current version so that subsequent sessions start without
+`.project-sdd/meta.md` to the current version so that subsequent sessions start without
 repeating this warning.
 
 - `corrupted`: identify and report which required files are missing from `.project-sdd/` to the

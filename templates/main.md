@@ -53,9 +53,9 @@ directory. It will be filled by the agent during task derivation.
 directory. It will be updated by the agent after each completed task.
 - **`tasks/completed_tasks/`**. An empty directory inside `.project-sdd/tasks/`. It will hold the
 history of completed tasks as the project progresses.
-- **`.old_versions/`**. An empty directory inside `.project-sdd/`. It will hold versioned snapshots
+- **`old_versions/`**. An empty directory inside `.project-sdd/`. It will hold versioned snapshots
 of project state at each point the specification is updated.
-- **`.meta.md`**. Metadata about this sdd-conductor instance. Create it inside `.project-sdd/`
-as `.meta.md` (note the dot prefix), from the `meta.md` template file in this directory, filling in:
+- **`meta.md`**. Metadata about this sdd-conductor instance. Create it inside `.project-sdd/`
+as `meta.md`, from the `meta.md` template file in this directory, filling in:
   - `## Version`: the content of the `VERSION` file in the sdd-conductor repository.
   - `## Bootstrapped`: today's date in `YYYY-MM-DDTHH:mm:ss.SSSZ` format.

@@ -30,7 +30,7 @@ WORK AFTER USER HAS CONFIRMED THEY WERE CORRECTLY NOTIFIED.**
         first entry is the task to execute next; each subsequent entry is queued in execution order.
         Each task entry contains `## Title`, `## Description`, and `## Completion criteria`
         sections; consecutive entries are separated by a `---` line.
-        - Copy `.project-sdd/project.md` into `.project-sdd/.project_snapshot.md`. This snapshot
+        - Copy `.project-sdd/project.md` into `.project-sdd/project_snapshot.md`. This snapshot
         records the exact specification at the time tasks were derived, and will be used to detect
         subsequent changes to the spec.
         - Create a `.project-sdd/tasks/completed_tasks` empty dir, where completed tasks will be
