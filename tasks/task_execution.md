@@ -1,10 +1,3 @@
-<mark>THIS IS THE ROOT FILE FOR INSTRUCTIONS EXPLICITLY RELATED TO THE EXECUTION OF A SINGLE
-TASK.</mark>
-
-**[AGENT READ-ONLY]** THIS FILE IS PART OF THE SDD-CONDUCTOR INFRASTRUCTURE. THE AI AGENT MUST
-READ IT BUT MUST NEVER MODIFY IT UNDER ANY CIRCUMSTANCES.
-
-
 ###### **Preliminary notes**
 - Upon request to read a specific file, you may fail to find it in the expected location. In such
 case, inform the user and stop execution of the task immediately. You may only resume after the user
@@ -49,12 +42,15 @@ style compliance, user notifications, and (most importantly) code generation.
     the spec snapshot is missing (most likely because `derive_tasks` was never completed or the
     file was deleted), instruct them to re-run `//derive_tasks` to regenerate it, and stop
     execution immediately.
-    - Compare `.sdd-conductor/project.md` against `.sdd-conductor/project_snapshot.md`. If they differ,
-    warn the user that the specification has changed since tasks were derived. Present two options
-    and stop until the user chooses:
-        - **Option A — Revert spec**: copy the content of `.sdd-conductor/project_snapshot.md` back
-        into `.sdd-conductor/project.md`, restoring the specification that was in effect when the
-        current task plan was derived. Resume execution normally.
+    - Compare `.sdd-conductor/project.md` against `.sdd-conductor/project_snapshot.md`. When comparing,
+    strip the `[AGENT-MANAGED FILE — DO NOT MODIFY MANUALLY]` header from `project_snapshot.md`
+    before comparing — only the spec content is compared. If they differ, warn the user that the
+    specification has changed since tasks were derived. Present two options and stop until the user
+    chooses:
+        - **Option A — Revert spec**: write the content of `.sdd-conductor/project_snapshot.md`
+        (excluding its `[AGENT-MANAGED FILE — DO NOT MODIFY MANUALLY]` header and the blank line
+        that follows it) back into `.sdd-conductor/project.md`, restoring the specification that was
+        in effect when the current task plan was derived. Resume execution normally.
         - **Option B — Accept new spec**: treat the updated `project.md` as the new specification.
         Proceed as follows:
             1. Determine the next version name by counting existing directories inside
@@ -83,8 +79,10 @@ style compliance, user notifications, and (most importantly) code generation.
             11. Re-derive tasks from the updated `.sdd-conductor/project.md` following the same logic
             as `tasks/derive_tasks.md`, but omitting its final snapshot step — that is handled
             exclusively by step 12 below.
-            12. Update `.sdd-conductor/project_snapshot.md` with the content of the new
-            `.sdd-conductor/project.md`.
+            12. Rewrite `.sdd-conductor/project_snapshot.md` as the
+            `[AGENT-MANAGED FILE — DO NOT MODIFY MANUALLY]` header on the first line, followed by
+            a blank line, followed by the exact content of the new `.sdd-conductor/project.md`, and
+            nothing else.
             13. Inform the user that the plan has been re-derived and resume from step 1 of
             "Steps for executing a task".
     - Read `.sdd-conductor/architecture.md` to get the current project architecture.

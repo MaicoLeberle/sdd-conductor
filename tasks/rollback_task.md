@@ -1,13 +1,3 @@
-<mark>THIS FILE CONTAINS THE INSTRUCTIONS FOR THE rollback_task COMMAND.</mark>
-
-**[AGENT READ-ONLY]** THIS FILE IS PART OF THE SDD-CONDUCTOR INFRASTRUCTURE.
-THE AI AGENT MUST READ IT BUT MUST NEVER MODIFY IT UNDER ANY CIRCUMSTANCES.
-
-**WARNING: THIS FILE SHOULD BE USED IN COMBINATION WITH ALL THE OTHER IMPORTED FILES, NOT MADE TO
-OVERRIDE ANY PREVIOUSLY READ FILE. ANY INCONSISTENCIES SHOULD BE REPORTED IMMEDIATELY, RESUMING
-WORK AFTER USER HAS CONFIRMED THEY WERE CORRECTLY NOTIFIED.**
-
-
 # Rollback task
 
 This command undoes exactly the last completed task. It reverts the corresponding code commit and
@@ -32,7 +22,10 @@ other reason. The task is restored as the first entry of `pending_tasks.md` and 
    inform the user and stop immediately. A clean working tree is required before a rollback.
 
 3. **Assert no spec divergence**. Read `.sdd-conductor/project.md` and
-   `.sdd-conductor/project_snapshot.md`. If their contents differ, the specification has been
+   `.sdd-conductor/project_snapshot.md`. Strip the `[AGENT-MANAGED FILE — DO NOT MODIFY MANUALLY]`
+   header and the blank line that follows it from `project_snapshot.md` before comparing — only
+   the spec content is compared.
+   If their contents differ, the specification has been
    modified since the current task plan was derived. Rolling back a task while the spec is
    diverged is unsafe because the pending task list may no longer be coherent with the spec.
    Inform the user of this and instruct them to resolve the spec divergence first by running

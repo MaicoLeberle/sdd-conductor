@@ -1,8 +1,5 @@
 [AGENT-MANAGED FILE — DO NOT MODIFY MANUALLY]
 
-<mark>THIS FILE CONTAINS THE DOCUMENTATION OF THE PROJECT ARCHITECTURE.</mark>
-
-
 ## *ARCHITECTURE*
 `todo-cli` is a single-binary Rust CLI application with two source modules:
 

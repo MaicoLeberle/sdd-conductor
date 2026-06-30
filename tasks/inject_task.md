@@ -1,13 +1,3 @@
-<mark>THIS FILE CONTAINS THE INSTRUCTIONS FOR THE inject_task COMMAND.</mark>
-
-**[AGENT READ-ONLY]** THIS FILE IS PART OF THE SDD-CONDUCTOR INFRASTRUCTURE.
-THE AI AGENT MUST READ IT BUT MUST NEVER MODIFY IT UNDER ANY CIRCUMSTANCES.
-
-**WARNING: THIS FILE SHOULD BE USED IN COMBINATION WITH ALL THE OTHER IMPORTED FILES, NOT MADE TO
-OVERRIDE ANY PREVIOUSLY READ FILE. ANY INCONSISTENCIES SHOULD BE REPORTED IMMEDIATELY, RESUMING
-WORK AFTER USER HAS CONFIRMED THEY WERE CORRECTLY NOTIFIED.**
-
-
 # Inject task
 
 This command allows the user to inject a new change request into the development process at any
@@ -85,9 +75,10 @@ front of the pending task queue for immediate execution.
      - Apply the confirmed edits to `.sdd-conductor/project.md`.
      - Apply any confirmed edits to `.sdd-conductor/architecture.md` and
        `.sdd-conductor/modules.md`, if applicable.
-     - Overwrite `.sdd-conductor/project_snapshot.md` with the updated content of
-       `.sdd-conductor/project.md`, so that the spec-divergence check in `execute_next_task`
-       does not trigger for this authorized change.
+     - Rewrite `.sdd-conductor/project_snapshot.md` as the
+       `[AGENT-MANAGED FILE — DO NOT MODIFY MANUALLY]` header on the first line, followed by a
+       blank line, followed by the exact content of `.sdd-conductor/project.md`, and nothing else. This ensures the
+       spec-divergence check in `execute_next_task` does not trigger for this authorized change.
    - Prepend the new tasks (preparatory tasks, if any, followed by the user-requested task) to
      `.sdd-conductor/tasks/pending_tasks.md`. If `pending_tasks.md` already has task entries,
      insert a `---` separator line between the last prepended task and the existing content.

@@ -1,14 +1,3 @@
-<mark>THIS FILE DEFINES THE LIFECYCLE STAGES OF A TARGET PROJECT AND HOW TO COMPUTE
-THE CURRENT STAGE AT RUNTIME.</mark>
-
-**[AGENT READ-ONLY]** THIS FILE IS PART OF THE SDD-CONDUCTOR INFRASTRUCTURE.
-THE AI AGENT MUST READ IT BUT MUST NEVER MODIFY IT UNDER ANY CIRCUMSTANCES.
-
-**WARNING: THIS FILE SHOULD BE USED IN COMBINATION WITH ALL THE OTHER IMPORTED FILES, NOT MADE TO
-OVERRIDE ANY PREVIOUSLY READ FILE. ANY INCONSISTENCIES SHOULD BE REPORTED IMMEDIATELY, RESUMING
-WORK AFTER USER HAS CONFIRMED THEY WERE CORRECTLY NOTIFIED.**
-
-
 # Stages
 
 A target project moves through the following lifecycle stages in order:
@@ -75,14 +64,14 @@ execution immediately.
 | `derive_project_spec` | `bootstrapped` |
 | `derive_tasks` | `bootstrapped` |
 | `reset_plan` | `plan_is_ready` |
-| `execute_next_task` | `plan_is_ready` or `in_progress` |
-| `inject_task` | `plan_is_ready` or `in_progress` |
+| `execute_next_task` | `plan_is_ready` <br> `in_progress` |
+| `inject_task` | `plan_is_ready` <br> `in_progress` |
 | `unblock` | `blocked` |
-| `rollback_task` | `in_progress` or `complete` |
-| `show_next_task` | `plan_is_ready`, `in_progress`, or `blocked` |
-| `show_pending_tasks` | `plan_is_ready`, `in_progress`, or `blocked` |
-| `show_stage` | any |
-| `help` | any |
+| `rollback_task` | `in_progress` <br>`complete` |
+| `show_next_task` | `plan_is_ready` <br> `in_progress` <br> `blocked` |
+| `show_pending_tasks` | `plan_is_ready` <br> `in_progress` <br> `blocked` |
+| `show_stage` | (any) |
+| `help` | (any) |
 
 
 # Session recovery

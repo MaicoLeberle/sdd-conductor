@@ -1,7 +1,3 @@
-<mark>THIS FILE CONTAINS THE DESCRIPTION OF THE DESIRED PROJECT, AS SET OF GOALS, NON-GOALS,
-CONSTRAINTS, AND SUCCESS CRITERIA.</mark>
-
-
 ## *GOALS*
 
 Implement a command-line todo list manager called `todo-cli` that persists tasks to a local JSON

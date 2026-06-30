@@ -1,13 +1,3 @@
-<mark>THIS FILE CONTAINS THE INSTRUCTIONS FOR THE derive_tasks COMMAND.</mark>
-
-**[AGENT READ-ONLY]** THIS FILE IS PART OF THE SDD-CONDUCTOR INFRASTRUCTURE.
-THE AI AGENT MUST READ IT BUT MUST NEVER MODIFY IT UNDER ANY CIRCUMSTANCES.
-
-**WARNING: THIS FILE SHOULD BE USED IN COMBINATION WITH ALL THE OTHER IMPORTED FILES, NOT MADE TO
-OVERRIDE ANY PREVIOUSLY READ FILE. ANY INCONSISTENCIES SHOULD BE REPORTED IMMEDIATELY, RESUMING
-WORK AFTER USER HAS CONFIRMED THEY WERE CORRECTLY NOTIFIED.**
-
-
 # Derive tasks
 
 - Compute the current lifecycle stage per `lifecycle/main.md`. Assert it is `bootstrapped`. If
@@ -30,8 +20,9 @@ WORK AFTER USER HAS CONFIRMED THEY WERE CORRECTLY NOTIFIED.**
         first entry is the task to execute next; each subsequent entry is queued in execution order.
         Each task entry contains `## Title`, `## Description`, and `## Completion criteria`
         sections; consecutive entries are separated by a `---` line.
-        - Copy `.sdd-conductor/project.md` into `.sdd-conductor/project_snapshot.md`. This snapshot
-        records the exact specification at the time tasks were derived, and will be used to detect
-        subsequent changes to the spec.
+        - Write `.sdd-conductor/project_snapshot.md` as the `[AGENT-MANAGED FILE — DO NOT MODIFY MANUALLY]`
+        header on the first line, followed by a blank line, followed by the exact content of
+        `.sdd-conductor/project.md`, and nothing else. This snapshot records the exact specification at the time tasks were derived,
+        and will be used to detect subsequent changes to the spec.
         - Create a `.sdd-conductor/tasks/completed_tasks` empty dir, where completed tasks will be
         stored.

@@ -1,10 +1,3 @@
-<mark>THIS IS THE ***MASTER*** FILE OF AN AI-DRIVEN INFRASTRUCTURE PROJECT FOR THE ASSISTED
-DEVELOPMENT OF OTHER SOFTWARE PROJECTS</mark>
-
-**[AGENT READ-ONLY]** THIS FILE IS PART OF THE SDD-CONDUCTOR INFRASTRUCTURE.
-THE AI AGENT MUST READ IT BUT MUST NEVER MODIFY IT UNDER ANY CIRCUMSTANCES.
-
-
 # Instructions
 1. **Load context**. Read the content of this file and follow derived instructions.
 2. **Session recovery**. Compute the current lifecycle stage per `lifecycle/main.md`. Load any
@@ -58,7 +51,7 @@ Required readings may recursively introduce additional required readings. Such d
 be followed as specified by the originating document, and the contents of all dependent readings
 should be considered part of the overall context, too. This recursive task must be completed before
 proceeding any further. Proceed in the order listed below. Do not re-read any previously-read file,
-only read required files as you traverse the reading tree, only those files, and only once each.
+only read required files as you traverse the reading tree, and only once each.
 - **languages/main.md**: programming languages configuration.
 - **tests/main.md**: instructions on how to create the test suite.
 - **templates/main.md**: templates for boostrapping new projects and their
